@@ -19,7 +19,20 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { 
+    hello: {
+      handler: "src/functions/hello.handler",
+      events: [
+        {
+          http: {
+            path: "hello",
+            method: "get",
+            cors: true
+          }
+        }
+      ]
+    }
+  },
   package: { individually: true },
   custom: {
     esbuild: {
