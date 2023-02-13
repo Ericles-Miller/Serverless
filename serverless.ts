@@ -1,11 +1,11 @@
 import type { AWS } from '@serverless/typescript';
 
-import hello from '@functions/hello';
+// import hello from '@functions/hello';
 
 const serverlessConfiguration: AWS = {
-  service: 'serveless',
+  service: 'serverless',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -46,6 +46,33 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
   },
+
+  resources: {
+    Resources: {
+      dbCertificateUsers: {
+        Type: "AWS::Dynamo::DBTable",
+        Properties: {
+          TableName: "usersCertificate",
+          ProvisionedThroughput: {
+            ReadCapacityUnits:5,
+            WriteCapacityUnits:5,
+          },
+          AttributesDefinitions:[
+            {
+              AttributesName: "id",
+              AttributesType: "S",
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: "id",
+              keyType: "HASH",
+            },
+          ],
+        }
+      }
+    }
+  }
 };
 
 module.exports = serverlessConfiguration;
